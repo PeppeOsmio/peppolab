@@ -1,0 +1,7 @@
+http:
+  middlewares:
+    basic_auth:
+      basicAuth:
+        users:
+          - peppeosmio:{{ env "BASIC_AUTH_PASSWORD" }}
+    

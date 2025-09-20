@@ -1,0 +1,21 @@
+http:
+  routers:
+    portainer:
+      entryPoints:
+        - websecure
+      rule: Host("{{ env "PORTAINER_DOMAIN" }}")
+      tls: true
+      service: portainer
+
+    portainer_no_domain:
+      entryPoints:
+        - portainer
+      rule: HostRegexp(`.*`)
+      tls: true
+      service: portainer
+
+  services:
+    portainer:
+      loadBalancer:
+        servers:
+          - url: https://portainer:9443

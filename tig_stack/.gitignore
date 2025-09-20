@@ -1,0 +1,4 @@
+env_files/*
+configs/*
+.env
+!docs/*

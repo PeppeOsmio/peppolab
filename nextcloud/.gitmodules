@@ -1,0 +1,3 @@
+[submodule "cert-gen"]
+	path = cert-gen
+	url = https://github.com/PeppeOsmio/cert-gen

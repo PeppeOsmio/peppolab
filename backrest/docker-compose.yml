@@ -1,0 +1,44 @@
+x-logging: &logging
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "10MB"
+      max-file: "10"
+
+name: backrest
+
+services:
+  backrest:
+    build:
+      context: backrest
+      dockerfile: Dockerfile
+    container_name: backrest
+    # privileged to use btrfs
+    privileged: true
+    # https://github.com/garethgeorge/backrest/blob/main/Dockerfile.alpine
+    volumes:
+      # mount /dev/btrfs-control to use btrfs
+      - /dev/btrfs-control:/dev/btrfs-control
+      - /var/run/docker.sock:/var/run/docker.sock
+
+      - /docker_data:/docker_data
+      - /docker_snapshots:/docker_snapshots
+      - ./scripts:/scripts
+
+      - /docker_data/backrest/volumes/backrest_data:/data
+      - /docker_data/backrest/volumes/config:/config
+      - /docker_data/backrest/volumes/cache:/cache
+      # - /MY-REPOS:/repos # [optional] mount repos if using local storage, not necessary for remotes e.g. B2, S3, etc.
+    environment:
+      BACKREST_DATA: /data # path for backrest data. restic binary and the database are placed here.
+      BACKREST_CONFIG: /config/config.json # path for the backrest config file.
+      XDG_CACHE_HOME: /cache # path for the restic cache which greatly improves performance.
+      TZ: UTC # set the timezone for the container, used as the timezone for cron jobs.
+    restart: unless-stopped
+    networks:
+      - traefik_global
+    <<: *logging
+
+networks:
+  traefik_global:
+    external: true

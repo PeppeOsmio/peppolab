@@ -1,0 +1,14 @@
+http:
+  routers:
+    gitlab:
+      entryPoints:
+        - websecure
+      rule: Host("{{ env "GITLAB_DOMAIN" }}")
+      tls: true
+      service: gitlab
+
+  services:
+    gitlab:
+      loadBalancer:
+        servers:
+          - url: http://gitlab:80

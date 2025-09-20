@@ -1,0 +1,38 @@
+api:
+  insecure: true
+  dashboard: true
+
+providers:
+  # docker:
+  #   endpoint: "unix:///var/run/docker.sock"
+  file:
+    directory: /dynamic_confs
+    watch: true
+
+entrypoints:
+  web:
+    address: ":80"
+  
+  websecure:
+    address: ":443"
+
+  portainer:
+    address: ":9443"
+
+  pihole:
+    address: ":8443"
+
+  backrest:
+    address: ":9898"
+
+  dozzle:
+    address: ":10443"
+
+  traefik_dashboard:
+    address: ":11443"
+
+serversTransport:
+  insecureSkipVerify: true
+
+log:
+  level: DEBUG

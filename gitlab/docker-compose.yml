@@ -1,0 +1,38 @@
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:18.1.0-ce.0
+    container_name: gitlab
+    restart: unless-stopped
+    hostname: "${GITLAB_DOMAIN}"
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url '${GITLAB_URL}'
+        nginx['client_max_body_size'] = "1024G"
+        nginx['listen_port'] = 80
+        nginx['listen_addresses'] = ['*']
+        nginx['listen_https'] = false
+        nginx['redirect_http_to_https'] = false
+    volumes:
+      - /docker_data/gitlab/volumes/config:/etc/gitlab
+      - /docker_data/gitlab/volumes/logs:/var/log/gitlab
+      - /docker_data/gitlab/volumes/data:/var/opt/gitlab
+    networks:
+      - traefik_global
+      - internal
+    shm_size: '256m'
+
+  gitlab-runner:
+    image: gitlab/gitlab-runner:ubuntu-139fb059
+    container_name: gitlab-runner
+    restart: unless-stopped
+    volumes:
+      - /docker_data/gitlab/volumes/gitlab_runner_config:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /docker_data/gitlab/configs/gitlab_runner/config.toml:/etc/gitlab-runner/config.toml
+    networks:
+      - internal
+
+networks:
+  internal:
+  traefik_global:
+    external: true

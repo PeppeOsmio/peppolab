@@ -1,0 +1,25 @@
+http:
+  routers:
+    dozzle:
+      entryPoints:
+        - websecure
+      rule: Host("{{ env "DOZZLE_DOMAIN" }}")
+      tls: true
+      service: dozzle
+      middlewares:
+        - basic_auth
+
+    dozzle_no_domain:
+      entryPoints:
+        - dozzle
+      rule: HostRegexp(`.*`)
+      tls: true
+      service: dozzle
+      middlewares:
+        - basic_auth
+
+  services:
+    dozzle:
+      loadBalancer:
+        servers:
+          - url: "http://dozzle:8080"

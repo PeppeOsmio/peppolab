@@ -1,0 +1,21 @@
+http:
+  routers:
+    backrest:
+      entryPoints:
+        - websecure
+      rule: Host("{{ env "BACKREST_DOMAIN" }}")
+      tls: true
+      service: backrest
+
+    backrest_no_domain:
+      entryPoints:
+        - backrest
+      rule: HostRegexp(`.*`)
+      tls: true
+      service: backrest
+
+  services:
+    backrest:
+      loadBalancer:
+        servers:
+          - url: http://backrest:9898

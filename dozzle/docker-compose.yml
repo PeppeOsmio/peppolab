@@ -1,0 +1,29 @@
+x-logging: &logging
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "10MB"
+      max-file: "10"
+
+name: "dozzle"
+
+services:
+  dozzle:
+    container_name: dozzle
+    image: amir20/dozzle:pr-3718
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    # labels:
+    #   - traefik.enable=true
+    #   - traefik.http.routers.dozzle.entrypoints=websecure
+    #   - traefik.http.routers.dozzle.rule=Host("dozzle.peppolab.giuseppebosa.eu")
+    #   - traefik.http.routers.dozzle.tls=true
+    #   - traefik.http.services.dozzle.loadBalancer.server.port=8080
+    networks:
+      - traefik_global
+    <<: *logging
+
+networks:
+  traefik_global:
+    external: true

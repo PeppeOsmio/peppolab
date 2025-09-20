@@ -1,0 +1,21 @@
+http:
+  routers:
+    pihole:
+      entryPoints:
+        - websecure
+      rule: Host("{{ env "PIHOLE_DOMAIN" }}")
+      tls: true
+      service: pihole
+  
+    pihole_no_domain:
+      entryPoints:
+        - pihole
+      rule: HostRegexp(`.*`)
+      tls: true
+      service: pihole
+
+  services:
+    pihole:
+      loadBalancer:
+        servers:
+          - url: http://pihole

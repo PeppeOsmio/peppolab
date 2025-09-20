@@ -1,0 +1,41 @@
+x-logging: &logging
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "10MB"
+      max-file: "10"
+
+services:
+  wireguard:
+    image: linuxserver/wireguard:1.0.20250521
+    container_name: wireguard
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE #optional
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: Etc/UTC
+      SERVERPORT: "51820" #optional
+      LOG_CONFS: true
+
+      SERVERURL: "${SERVERURL}"
+      PEERS: "${PEERS}"
+      PEERDNS: "${PEERDNS}"
+      INTERNAL_SUBNET: "${INTERNAL_SUBNET}"
+      ALLOWEDIPS: "${ALLOWEDIPS}"
+      PERSISTENTKEEPALIVE_PEERS: "${PERSISTENTKEEPALIVE_PEERS}"
+
+    env_file:
+      - /docker_data/wireguard/configs/env_files/wireguard.env
+    volumes:
+      - /docker_data/wireguard/volumes/config:/config
+      - /lib/modules:/lib/modules #optional
+    ports:
+      - 51820:51820/udp
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+      - net.ipv4.ip_forward=1 # needed to access home network IPs!!
+    <<: *logging
+    

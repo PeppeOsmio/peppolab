@@ -1,0 +1,26 @@
+http:
+  routers:
+    grafana:
+      entryPoints:
+        - websecure
+      rule: Host("{{ env "GRAFANA_DOMAIN" }}")
+      tls: true
+      service: grafana
+
+    influxdb:
+      entryPoints:
+        - websecure
+      rule: Host("{{ env "INFLUXDB_DOMAIN" }}")
+      tls: true
+      service: influxdb
+
+  services:
+    grafana:
+      loadBalancer:
+        servers:
+          - url: "http://grafana:3000"
+
+    influxdb:
+      loadBalancer:
+        servers:
+          - url: "http://influxdb:8086"

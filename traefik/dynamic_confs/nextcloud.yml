@@ -1,0 +1,45 @@
+http:
+  routers:
+    nextcloud:
+      entryPoints:
+        - websecure
+      rule: Host("{{ env "NEXTCLOUD_DOMAIN" }}")
+      tls: true
+      service: nextcloud
+  
+    collabora:
+      entryPoints:
+        - websecure
+      rule: Host("{{ env "COLLABORA_DOMAIN" }}")
+      tls: true
+      service: collabora
+
+    nextcloud-notify-push:
+      entryPoints:
+        - websecure
+      rule: Host("{{ env "NEXTCLOUD_DOMAIN" }}") && PathPrefix("/push")
+      tls: true
+      service: nextcloud-notify-push
+
+  middlewares:
+    nextcloud_strip_push:
+      stripPrefix:
+        prefixes:
+          - /push
+
+
+  services:
+    nextcloud:
+      loadBalancer:
+        servers:
+          - url: http://nextcloud
+    
+    collabora:
+      loadBalancer:
+        servers:
+          - url: http://collabora-nextcloud:9980
+
+    nextcloud-notify-push:
+      loadBalancer:
+        servers:
+          - url: http://nextcloud-notify-push:7867

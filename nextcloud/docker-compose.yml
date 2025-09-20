@@ -1,0 +1,125 @@
+x-logging: &logging
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "10MB"
+      max-file: "10"
+
+name: nextcloud
+
+services:
+  nextcloud:
+    container_name: nextcloud
+    image: nextcloud:31.0.8-apache
+    restart: unless-stopped
+    volumes:
+      - /docker_data/nextcloud/volumes/nextcloud_src:/var/www/html
+      - /docker_data/nextcloud/volumes/nextcloud_data:/var/www/html/data
+    environment:
+      APACHE_DISABLE_REWRITE_IP: 1
+      OVERWRITEPROTOCOL: https 
+      REDIS_HOST: redis-nextcloud
+      POSTGRES_DB: nextcloud
+      POSTGRES_HOST: postgres-nextcloud
+      NEXTCLOUD_TRUSTED_PROXIES: "172.25.1.1 172.26.1.1"
+      
+      OVERWRITEHOST: "${NEXTCLOUD_DOMAIN}"
+      NEXTCLOUD_TRUSTED_DOMAINS: "${NEXTCLOUD_DOMAIN} nextcloud"
+      NEXTCLOUD_ADMIN_USER: "${NEXTCLOUD_ADMIN_USER}"
+      NEXTCLOUD_ADMIN_PASSWORD: "${NEXTCLOUD_ADMIN_PASSWORD}"
+      REDIS_HOST_PASSWORD: "${REDIS_PASSWORD}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_ROOT_PASSWORD: "${POSTGRES_PASSWORD}"
+      
+    depends_on:
+      - postgres-nextcloud
+      - redis-nextcloud
+    networks:
+      - internal
+      - traefik_global
+    <<: *logging
+
+  nextcloud-cron:
+    container_name: nextcloud-cron
+    image: nextcloud:31.0.8-fpm
+    restart: unless-stopped
+    entrypoint: /cron.sh
+    volumes:
+      - /docker_data/nextcloud/volumes/nextcloud_src:/var/www/html
+      - /docker_data/nextcloud/volumes/nextcloud_data:/var/www/html/data
+    depends_on:
+      - nextcloud
+    networks:
+      - internal
+    <<: *logging
+
+  # https://github.com/nextcloud/docker/issues/1422#issuecomment-786481199
+  # starting this will fail the first time, will success only after installing the app
+  # "Client Push" from the Nextcloud app store
+  nextcloud-notify-push:
+    container_name: nextcloud-notify-push
+    image: nextcloud:31.0.8-fpm
+    restart: unless-stopped
+    entrypoint: /var/www/html/custom_apps/notify_push/bin/x86_64/notify_push /var/www/html/config/config.php
+    networks:
+      internal:
+        ipv4_address: 172.26.1.1
+      traefik_global:
+    volumes:
+      - /docker_data/nextcloud/volumes/nextcloud_src:/var/www/html
+      - /docker_data/nextcloud/volumes/nextcloud_data:/var/www/html/data
+    depends_on:
+      - postgres-nextcloud
+      - redis-nextcloud
+    environment:
+      PORT: "7867"
+      NEXTCLOUD_URL: "http://nextcloud/"  # don't go through the proxy to contact the nextcloud server
+
+  postgres-nextcloud:
+    container_name: postgres-nextcloud
+    image: postgres:16.6
+    restart: unless-stopped
+    volumes:
+      - /docker_data/nextcloud/volumes/postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: nextcloud
+
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+    networks:
+      - internal
+    <<: *logging
+  
+  redis-nextcloud:
+    container_name: redis-nextcloud
+    image: bitnami/redis:7.4.2
+    environment:
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
+    restart: unless-stopped
+    networks:
+      - internal
+    <<: *logging
+    
+  collabora-nextcloud:
+    container_name: collabora-nextcloud
+    image: collabora/code:24.04.13.2.1
+    restart: unless-stopped
+    environment:
+      extra_params: "--o:ssl.enable=false --o:ssl.termination=true"
+    cap_add:
+      - MKNOD
+    networks:
+      - internal
+      - traefik_global
+    <<: *logging
+
+networks:
+  internal:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.26.0.0/16
+          ip_range: 172.26.0.0/24
+  traefik_global:
+    external: true

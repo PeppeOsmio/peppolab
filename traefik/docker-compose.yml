@@ -1,0 +1,54 @@
+x-logging: &logging
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "10MB"
+      max-file: "10"
+
+name: "traefik"
+
+services:
+  traefik:
+    container_name: traefik
+    image: traefik:v3.5.0
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+      - 8443:8443 # pihole
+      - 9443:9443 # portainer
+      - 9898:9898 # backrest
+      - 10443:10443 # dozzle
+      - 11443:11443 # traefik dashboard
+    environment:
+      PUBLIC_DOMAIN: "${PUBLIC_DOMAIN}"
+      PIHOLE_DOMAIN: "${PIHOLE_DOMAIN}"
+      NEXTCLOUD_DOMAIN: "${NEXTCLOUD_DOMAIN}"
+      COLLABORA_DOMAIN: "${COLLABORA_DOMAIN}"
+      PORTAINER_DOMAIN: "${PORTAINER_DOMAIN}"
+      IMMICH_DOMAIN: "${IMMICH_DOMAIN}"
+      GRAFANA_DOMAIN: "${GRAFANA_DOMAIN}"
+      INFLUXDB_DOMAIN: "${INFLUXDB_DOMAIN}"
+      BACKREST_DOMAIN: "${BACKREST_DOMAIN}"
+      DOZZLE_DOMAIN: "${DOZZLE_DOMAIN}"
+      TRAEFIK_DOMAIN: "${TRAEFIK_DOMAIN}"
+      GITLAB_DOMAIN: "${GITLAB_DOMAIN}"
+      BASIC_AUTH_PASSWORD: "${BASIC_AUTH_PASSWORD}"
+    volumes:
+      - ./traefik.yml:/traefik.yml:ro
+      - ./dynamic_confs:/dynamic_confs
+      - /docker_data/traefik/volumes/certbot/conf/live/${PUBLIC_DOMAIN}/fullchain.pem:/certs/fullchain.pem
+      - /docker_data/traefik/volumes/certbot/conf/live/${PUBLIC_DOMAIN}/privkey.pem:/certs/privkey.pem
+    networks:
+      global:
+        ipv4_address: 172.25.1.1
+    <<: *logging
+
+networks:
+  global:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.25.0.0/16
+          ip_range: 172.25.0.0/24
+         

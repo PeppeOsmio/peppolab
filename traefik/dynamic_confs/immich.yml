@@ -1,0 +1,14 @@
+http:
+  routers:
+    immich:
+      entryPoints:
+        - websecure
+      rule: Host("{{ env "IMMICH_DOMAIN" }}")
+      tls: true
+      service: immich
+
+  services:
+    immich:
+      loadBalancer:
+        servers:
+          - url: http://immich_server:2283

@@ -1,0 +1,30 @@
+x-logging: &logging
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "10MB"
+      max-file: "10"
+
+name: pihole
+
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:2025.08.0
+    restart: unless-stopped
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+    environment:
+      TZ: "Etc/UTC"
+      WEBPASSWORD: ${WEBPASSWORD}
+    volumes:
+      - /docker_data/pihole/volumes/etc-pihole:/etc/pihole
+      - /docker_data/pihole/volumes/etc-dnsmasq.d:/etc/dnsmasq.d
+    networks:
+      - traefik_global
+    <<: *logging
+
+networks:
+  traefik_global:
+    external: true

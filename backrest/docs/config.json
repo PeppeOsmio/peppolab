@@ -1,0 +1,306 @@
+{
+  "modno": 31,
+  "instance": "peppolab",
+  "repos": [
+    {
+      "id": "<s3_repo>",
+      "uri": "***",
+      "password": "***",
+      "env": [
+        "AWS_ACCESS_KEY_ID=***",
+        "AWS_SECRET_ACCESS_KEY=***"
+      ],
+      "prunePolicy": {
+        "schedule": {
+          "cron": "0 0 1 * *",
+          "clock": "CLOCK_LAST_RUN_TIME"
+        },
+        "maxUnusedPercent": 10
+      },
+      "checkPolicy": {
+        "schedule": {
+          "cron": "0 0 1 * *",
+          "clock": "CLOCK_LAST_RUN_TIME"
+        },
+        "readDataSubsetPercent": 0
+      },
+      "commandPrefix": {},
+      "guid": "ea25efa10c9762a344d41a506b95aa4d55d86453d7a0b485438b99522a59cdd6"
+    }
+  ],
+  "plans": [
+    {
+      "id": "backrest",
+      "repo": "<s3_repo>",
+      "paths": [
+        "/docker_snapshots/backrest"
+      ],
+      "retention": {
+        "policyKeepLastN": 30
+      },
+      "hooks": [
+        {
+          "conditions": [
+            "CONDITION_SNAPSHOT_START"
+          ],
+          "onError": "ON_ERROR_CANCEL",
+          "actionCommand": {
+            "command": "btrfs subvolume delete /docker_snapshots/backrest; btrfs subvolume snapshot /docker_data/backrest /docker_snapshots/"
+          }
+        },
+        {
+          "conditions": [
+            "CONDITION_SNAPSHOT_END"
+          ],
+          "actionCommand": {
+            "command": "btrfs subvolume delete /docker_snapshots/backrest"
+          }
+        }
+      ],
+      "schedule": {
+        "cron": "0 3 * * *",
+        "clock": "CLOCK_UTC"
+      }
+    },
+    {
+      "id": "immich",
+      "repo": "<s3_repo>",
+      "paths": [
+        "/docker_snapshots/immich"
+      ],
+      "retention": {
+        "policyKeepLastN": 30
+      },
+      "hooks": [
+        {
+          "conditions": [
+            "CONDITION_SNAPSHOT_START"
+          ],
+          "onError": "ON_ERROR_CANCEL",
+          "actionCommand": {
+            "command": "btrfs subvolume delete /docker_snapshots/immich; btrfs subvolume snapshot /docker_data/immich /docker_snapshots/"
+          }
+        },
+        {
+          "conditions": [
+            "CONDITION_SNAPSHOT_END"
+          ],
+          "actionCommand": {
+            "command": "btrfs subvolume delete /docker_snapshots/immich"
+          }
+        }
+      ],
+      "schedule": {
+        "cron": "0 3 * * *",
+        "clock": "CLOCK_UTC"
+      }
+    },
+    {
+      "id": "nextcloud",
+      "repo": "<s3_repo>",
+      "paths": [
+        "/docker_snapshots/nextcloud"
+      ],
+      "retention": {
+        "policyKeepLastN": 30
+      },
+      "hooks": [
+        {
+          "conditions": [
+            "CONDITION_SNAPSHOT_START"
+          ],
+          "onError": "ON_ERROR_CANCEL",
+          "actionCommand": {
+            "command": "btrfs subvolume delete /docker_snapshots/nextcloud; btrfs subvolume snapshot /docker_data/nextcloud /docker_snapshots/"
+          }
+        },
+        {
+          "conditions": [
+            "CONDITION_SNAPSHOT_END"
+          ],
+          "actionCommand": {
+            "command": "btrfs subvolume delete /docker_snapshots/nextcloud"
+          }
+        }
+      ],
+      "schedule": {
+        "cron": "0 3 * * *",
+        "clock": "CLOCK_UTC"
+      }
+    },
+    {
+      "id": "nginx",
+      "repo": "<s3_repo>",
+      "paths": [
+        "/docker_snapshots/nginx"
+      ],
+      "retention": {
+        "policyKeepLastN": 30
+      },
+      "hooks": [
+        {
+          "conditions": [
+            "CONDITION_SNAPSHOT_START"
+          ],
+          "onError": "ON_ERROR_CANCEL",
+          "actionCommand": {
+            "command": "btrfs subvolume delete /docker_snapshots/nginx; btrfs subvolume snapshot /docker_data/nginx /docker_snapshots/nginx"
+          }
+        },
+        {
+          "conditions": [
+            "CONDITION_SNAPSHOT_END"
+          ],
+          "actionCommand": {
+            "command": "btrfs subvolume delete /docker_snapshots/nginx"
+          }
+        }
+      ],
+      "schedule": {
+        "cron": "0 3 * * *",
+        "clock": "CLOCK_UTC"
+      }
+    },
+    {
+      "id": "pihole",
+      "repo": "<s3_repo>",
+      "paths": [
+        "/docker_snapshots/pihole"
+      ],
+      "retention": {
+        "policyKeepLastN": 30
+      },
+      "hooks": [
+        {
+          "conditions": [
+            "CONDITION_SNAPSHOT_START"
+          ],
+          "onError": "ON_ERROR_CANCEL",
+          "actionCommand": {
+            "command": "btrfs subvolume delete /docker_snapshots/pihole; btrfs subvolume snapshot /docker_data/pihole /docker_snapshots/"
+          }
+        },
+        {
+          "conditions": [
+            "CONDITION_SNAPSHOT_END"
+          ],
+          "actionCommand": {
+            "command": "btrfs subvolume delete /docker_snapshots/pihole"
+          }
+        }
+      ],
+      "schedule": {
+        "cron": "0 3 * * *",
+        "clock": "CLOCK_UTC"
+      }
+    },
+    {
+      "id": "portainer",
+      "repo": "<s3_repo>",
+      "paths": [
+        "/docker_snapshots/portainer"
+      ],
+      "retention": {
+        "policyKeepLastN": 30
+      },
+      "hooks": [
+        {
+          "conditions": [
+            "CONDITION_SNAPSHOT_START"
+          ],
+          "onError": "ON_ERROR_CANCEL",
+          "actionCommand": {
+            "command": "btrfs subvolume delete /docker_snapshots/portainer; btrfs subvolume snapshot /docker_data/portainer /docker_snapshots/"
+          }
+        },
+        {
+          "conditions": [
+            "CONDITION_SNAPSHOT_END"
+          ],
+          "actionCommand": {
+            "command": "btrfs subvolume delete /docker_snapshots/portainer"
+          }
+        }
+      ],
+      "schedule": {
+        "cron": "0 3 * * *",
+        "clock": "CLOCK_UTC"
+      }
+    },
+    {
+      "id": "tig_stack",
+      "repo": "<s3_repo>",
+      "paths": [
+        "/docker_snapshots/tig_stack"
+      ],
+      "retention": {
+        "policyKeepLastN": 30
+      },
+      "hooks": [
+        {
+          "conditions": [
+            "CONDITION_SNAPSHOT_START"
+          ],
+          "onError": "ON_ERROR_CANCEL",
+          "actionCommand": {
+            "command": "btrfs subvolume delete /docker_snapshots/tig_stack; btrfs subvolume snapshot /docker_data/tig_stack /docker_snapshots/"
+          }
+        },
+        {
+          "conditions": [
+            "CONDITION_SNAPSHOT_END"
+          ],
+          "actionCommand": {
+            "command": "btrfs subvolume delete /docker_snapshots/tig_stack"
+          }
+        }
+      ],
+      "schedule": {
+        "cron": "0 3 * * *",
+        "clock": "CLOCK_UTC"
+      }
+    },
+    {
+      "id": "wireguard",
+      "repo": "<s3_repo>",
+      "paths": [
+        "/docker_snapshots/wireguard"
+      ],
+      "retention": {
+        "policyKeepLastN": 30
+      },
+      "hooks": [
+        {
+          "conditions": [
+            "CONDITION_SNAPSHOT_START"
+          ],
+          "onError": "ON_ERROR_CANCEL",
+          "actionCommand": {
+            "command": "btrfs subvolume delete /docker_snapshots/wireguard; btrfs subvolume snapshot /docker_data/wireguard /docker_snapshots/"
+          }
+        },
+        {
+          "conditions": [
+            "CONDITION_SNAPSHOT_END"
+          ],
+          "actionCommand": {
+            "command": "btrfs subvolume delete /docker_snapshots/wireguard"
+          }
+        }
+      ],
+      "schedule": {
+        "cron": "0 3 * * *",
+        "clock": "CLOCK_UTC"
+      }
+    }
+  ],
+  "auth": {
+    "users": [
+      {
+        "name": "peppeosmio",
+        "passwordBcrypt": "JDJhJDEwJFNTZnlvaGJXV1dOWlhTNFZPb3k1WXVjZy5RZTdINkhpbldOOVFycjBYeExsWnhqTVBuM1Uy"
+      }
+    ]
+  },
+  "version": 4
+}
