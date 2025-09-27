@@ -1,0 +1,21 @@
+http:
+  routers:
+    registry:
+      entryPoints:
+        - websecure
+      rule: Host("{{ env "REGISTRY_DOMAIN" }}")
+      tls: true
+      service: registry
+
+    registry_no_domain:
+      entryPoints:
+        - registry
+      rule: HostRegexp(`.*`)
+      tls: true
+      service: registry
+
+  services:
+    registry:
+      loadBalancer:
+        servers:
+          - url: http://registry:5000

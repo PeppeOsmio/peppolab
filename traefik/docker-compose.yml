@@ -20,6 +20,7 @@ services:
       - 9898:9898 # backrest
       - 10443:10443 # dozzle
       - 11443:11443 # traefik dashboard
+      - 5000:5000 # registry
     environment:
       PUBLIC_DOMAIN: "${PUBLIC_DOMAIN}"
       PIHOLE_DOMAIN: "${PIHOLE_DOMAIN}"
@@ -33,6 +34,7 @@ services:
       DOZZLE_DOMAIN: "${DOZZLE_DOMAIN}"
       TRAEFIK_DOMAIN: "${TRAEFIK_DOMAIN}"
       GITLAB_DOMAIN: "${GITLAB_DOMAIN}"
+      REGISTRY_DOMAIN: "${REGISTRY_DOMAIN}"
       BASIC_AUTH_PASSWORD: "${BASIC_AUTH_PASSWORD}"
     volumes:
       - ./traefik.yml:/traefik.yml:ro

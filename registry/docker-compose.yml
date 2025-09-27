@@ -1,0 +1,16 @@
+services:
+  registry:
+    container_name: registry
+    restart: always
+    image: registry:3.0.0
+    volumes:
+      - ./config.yml:/etc/docker/registry/config.yml:ro
+      - /docker_data/registry/volumes/data:/var/lib/registry:rw
+      - /docker_data/registry/configs/htpasswd:/auth/htpasswd:ro
+    networks:
+      - traefik_global
+
+
+networks:
+  traefik_global:
+    external: true

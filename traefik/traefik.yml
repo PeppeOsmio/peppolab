@@ -31,6 +31,9 @@ entrypoints:
   traefik_dashboard:
     address: ":11443"
 
+  registry:
+    address: ":5000"
+
 serversTransport:
   insecureSkipVerify: true
 
