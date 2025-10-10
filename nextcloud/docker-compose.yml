@@ -10,7 +10,7 @@ name: nextcloud
 services:
   nextcloud:
     container_name: nextcloud
-    image: nextcloud:31.0.8-apache
+    image: nextcloud:32.0.0-apache
     restart: unless-stopped
     volumes:
       - /docker_data/nextcloud/volumes/nextcloud_src:/var/www/html
@@ -42,7 +42,7 @@ services:
 
   nextcloud-cron:
     container_name: nextcloud-cron
-    image: nextcloud:31.0.8-fpm
+    image: nextcloud:32.0.0-fpm
     restart: unless-stopped
     entrypoint: /cron.sh
     volumes:
@@ -59,7 +59,7 @@ services:
   # "Client Push" from the Nextcloud app store
   nextcloud-notify-push:
     container_name: nextcloud-notify-push
-    image: nextcloud:31.0.8-fpm
+    image: nextcloud:32.0.0-fpm
     restart: unless-stopped
     entrypoint: /var/www/html/custom_apps/notify_push/bin/x86_64/notify_push /var/www/html/config/config.php
     networks:
@@ -81,11 +81,12 @@ services:
     image: postgres:16.6
     restart: unless-stopped
     volumes:
-      - /docker_data/nextcloud/volumes/postgres_data:/var/lib/postgresql/data
+      - /docker_data/nextcloud/volumes/postgres_data:/var/lib/postgresql
     environment:
       POSTGRES_DB: nextcloud
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      PGDATA: /var/lib/postgresql/16/docker
     networks:
       - internal
     <<: *logging
@@ -101,7 +102,7 @@ services:
     
   collabora-nextcloud:
     container_name: collabora-nextcloud
-    image: collabora/code:24.04.13.2.1
+    image: collabora/code:25.04.6.1.1
     restart: unless-stopped
     environment:
       extra_params: "--o:ssl.enable=false --o:ssl.termination=true"

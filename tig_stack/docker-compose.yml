@@ -25,7 +25,7 @@ services:
 
   telegraf:
     container_name: telegraf
-    image: telegraf:1.35.4
+    image: telegraf:1.36.2
     restart: unless-stopped
     # bypass entrypoint because it always sets the user as telegraf
     # https://github.com/influxdata/influxdata-docker/blob/master/telegraf/1.34/entrypoint.sh
@@ -64,7 +64,7 @@ services:
 
   grafana:
     container_name: grafana
-    image: grafana/grafana-oss:12.2.0-17084981832
+    image: grafana/grafana-oss:12.2.0-17142428006
     restart: unless-stopped
     volumes:
       - /docker_data/tig_stack/volumes/grafana_data:/var/lib/grafana

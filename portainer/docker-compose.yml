@@ -10,7 +10,7 @@ name: portainer
 services:
   portainer:
     container_name: portainer
-    image: portainer/portainer-ce:2.33.0-alpine
+    image: portainer/portainer-ce:2.33.2-alpine
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -24,7 +24,7 @@ services:
 
   portainer-agent:
     container_name: portainer-agent
-    image: portainer/agent:2.33.0-alpine
+    image: portainer/agent:2.33.2-alpine
     volumes:
       # Mount the host's Docker socket into the container
       - /var/run/docker.sock:/var/run/docker.sock
