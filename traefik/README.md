@@ -11,22 +11,27 @@ Run this command then follow the instructions. Retry it until the value for `_ac
 Then follow the instructions.
 
 ```bash
-docker compose -f certbot.docker-compose.yml run --rm certbot certonly --manual --preferred-challenges dns --dry-run -d "*.peppolab.giuseppebosa.eu"
+docker compose -f certbot.docker-compose.yml run --rm certbot certonly --manual --preferred-challenges dns --dry-run -d "*.peppolab.it"
 ```
 
 To check if the DNS txt password is available:
 
 ```shell
-dig -t txt _acme-challenge.peppolab.giuseppebosa.eu
+dig -t txt _acme-challenge.peppolab.it
 ```
 
 ## 3. Run certbot if everything was ok
+Please rename the folder `/docker_data/traefik/volumes/certbot/conf/live/peppolab.it` to something else, or it will get overwritten.
 Run this command then follow the instructions. Retry it until the value for `_acme-channel.${PUBLIC_DOMAIN}` doesn't contain special characters like "_" or "|" so you can do this in every DNS provider.
 Then follow the instructions.
 
 ```bash
-docker compose -f certbot.docker-compose.yml run --rm certbot certonly --manual --preferred-challenges dns -d *.peppolab.giuseppebosa.eu
+docker compose -f certbot.docker-compose.yml run --rm certbot certonly --manual --preferred-challenges dns -d *.peppolab.it
 ```
+
+## 5. Rename the generated folder
+
+Rename the generated folder `/docker_data/traefik/volumes/certbot/conf/live/peppolab.it-0003` or something like to to just the domain name, like `/docker_data/traefik/volumes/certbot/conf/live/peppolab.it`
 
 ## 4. Down everything
 ```bash
