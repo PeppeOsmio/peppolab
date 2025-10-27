@@ -4,14 +4,16 @@ http:
       entryPoints:
         - websecure
       rule: Host("{{ env "PORTAINER_DOMAIN" }}")
-      tls: true
+      tls:
+        certResolver: ovh
       service: portainer
 
     portainer_no_domain:
       entryPoints:
         - portainer
       rule: HostRegexp(`.*`)
-      tls: true
+      tls:
+        certResolver: ovh
       service: portainer
 
   services:

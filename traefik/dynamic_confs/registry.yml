@@ -4,14 +4,16 @@ http:
       entryPoints:
         - websecure
       rule: Host("{{ env "REGISTRY_DOMAIN" }}")
-      tls: true
+      tls:
+        certResolver: ovh
       service: registry
 
     registry_no_domain:
       entryPoints:
         - registry
       rule: HostRegexp(`.*`)
-      tls: true
+      tls:
+        certResolver: ovh
       service: registry
 
   services:

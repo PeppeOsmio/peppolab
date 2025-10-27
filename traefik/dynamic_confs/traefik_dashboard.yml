@@ -4,7 +4,8 @@ http:
       entryPoints:
         - websecure
       rule: Host("{{ env "TRAEFIK_DOMAIN" }}")
-      tls: true
+      tls:
+        certResolver: ovh
       service: api@internal
       middlewares:
         - basic_auth
@@ -13,7 +14,8 @@ http:
       entryPoints:
         - traefik_dashboard
       rule: HostRegexp(`.*`)
-      tls: true
+      tls:
+        certResolver: ovh
       service: api@internal
       middlewares:
         - basic_auth

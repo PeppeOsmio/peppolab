@@ -4,14 +4,16 @@ http:
       entryPoints:
         - websecure
       rule: Host("{{ env "BACKREST_DOMAIN" }}")
-      tls: true
+      tls:
+        certResolver: ovh
       service: backrest
 
     backrest_no_domain:
       entryPoints:
         - backrest
       rule: HostRegexp(`.*`)
-      tls: true
+      tls:
+        certResolver: ovh
       service: backrest
 
   services:

@@ -4,7 +4,8 @@ http:
       entryPoints:
         - websecure
       rule: Host("{{ env "GITLAB_DOMAIN" }}")
-      tls: true
+      tls:
+        certResolver: ovh
       service: gitlab
 
   services:

@@ -12,6 +12,29 @@ services:
     container_name: traefik
     image: traefik:v3.5.3
     restart: unless-stopped
+    command:
+    - --api.insecure=false
+    - --api.dashboard=true
+
+    - --providers.file.directory=/dynamic_confs
+    - --providers.file.watch=true
+
+    - --entrypoints.web.address=:80
+    - --entrypoints.websecure.address=:443
+    - --entrypoints.portainer.address=:9443
+    - --entrypoints.pihole.address=:8443
+    - --entrypoints.backrest.address=:9898
+    - --entrypoints.dozzle.address=:10443
+    - --entrypoints.traefik_dashboard.address=:11443
+    - --entrypoints.registry.address=:5000
+
+    - --certificatesresolvers.ovh.acme.email=${ACME_EMAIL}
+    - --certificatesresolvers.ovh.acme.storage=/data/acme.json
+    - --certificatesresolvers.ovh.acme.dnschallenge.provider=ovh
+
+    - --serverstransport.insecureskipverify=true
+
+    - --log.level=DEBUG
     ports:
       - 80:80
       - 443:443
@@ -22,6 +45,11 @@ services:
       - 11443:11443 # traefik dashboard
       - 5000:5000 # registry
     environment:
+      ACME_EMAIL: "${ACME_EMAIL}"
+      OVH_APPLICATION_KEY: "${OVH_APPLICATION_KEY}"
+      OVH_APPLICATION_SECRET: "${OVH_APPLICATION_SECRET}"
+      OVH_CONSUMER_KEY: "${OVH_CONSUMER_KEY}"
+      OVH_ENDPOINT: "${OVH_ENDPOINT}"
       PUBLIC_DOMAIN: "${PUBLIC_DOMAIN}"
       PIHOLE_DOMAIN: "${PIHOLE_DOMAIN}"
       NEXTCLOUD_DOMAIN: "${NEXTCLOUD_DOMAIN}"
@@ -37,10 +65,8 @@ services:
       REGISTRY_DOMAIN: "${REGISTRY_DOMAIN}"
       BASIC_AUTH_PASSWORD: "${BASIC_AUTH_PASSWORD}"
     volumes:
-      - ./traefik.yml:/traefik.yml:ro
       - ./dynamic_confs:/dynamic_confs
-      - /docker_data/traefik/volumes/certbot/conf/live/${PUBLIC_DOMAIN}/fullchain.pem:/certs/fullchain.pem
-      - /docker_data/traefik/volumes/certbot/conf/live/${PUBLIC_DOMAIN}/privkey.pem:/certs/privkey.pem
+      - /docker_data/traefik/volumes/data:/data
     networks:
       global:
         ipv4_address: 172.25.1.1

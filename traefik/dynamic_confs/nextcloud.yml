@@ -4,21 +4,24 @@ http:
       entryPoints:
         - websecure
       rule: Host("{{ env "NEXTCLOUD_DOMAIN" }}")
-      tls: true
+      tls:
+        certResolver: ovh
       service: nextcloud
   
     collabora:
       entryPoints:
         - websecure
       rule: Host("{{ env "COLLABORA_DOMAIN" }}")
-      tls: true
+      tls:
+        certResolver: ovh
       service: collabora
 
     nextcloud-notify-push:
       entryPoints:
         - websecure
       rule: Host("{{ env "NEXTCLOUD_DOMAIN" }}") && PathPrefix("/push")
-      tls: true
+      tls:
+        certResolver: ovh
       service: nextcloud-notify-push
 
   middlewares:

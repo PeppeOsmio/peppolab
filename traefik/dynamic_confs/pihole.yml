@@ -4,14 +4,16 @@ http:
       entryPoints:
         - websecure
       rule: Host("{{ env "PIHOLE_DOMAIN" }}")
-      tls: true
+      tls:
+        certResolver: ovh
       service: pihole
   
     pihole_no_domain:
       entryPoints:
         - pihole
       rule: HostRegexp(`.*`)
-      tls: true
+      tls:
+        certResolver: ovh
       service: pihole
 
   services:

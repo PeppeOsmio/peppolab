@@ -4,14 +4,16 @@ http:
       entryPoints:
         - websecure
       rule: Host("{{ env "GRAFANA_DOMAIN" }}")
-      tls: true
+      tls:
+        certResolver: ovh
       service: grafana
 
     influxdb:
       entryPoints:
         - websecure
       rule: Host("{{ env "INFLUXDB_DOMAIN" }}")
-      tls: true
+      tls:
+        certResolver: ovh
       service: influxdb
 
   services:
