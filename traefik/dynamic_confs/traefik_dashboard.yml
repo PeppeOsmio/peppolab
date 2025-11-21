@@ -3,7 +3,7 @@ http:
     traefik_dashboard:
       entryPoints:
         - websecure
-      rule: Host("{{ env "TRAEFIK_DOMAIN" }}")
+      rule: Host("{{ env "TRAEFIK_DASHBOARD_DOMAIN" }}")
       tls:
         certResolver: ovh
       service: api@internal

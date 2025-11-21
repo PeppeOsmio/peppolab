@@ -13,28 +13,28 @@ services:
     image: traefik:v3.5.3
     restart: unless-stopped
     command:
-    - --api.insecure=false
-    - --api.dashboard=true
+      - --api.insecure=false
+      - --api.dashboard=true
 
-    - --providers.file.directory=/dynamic_confs
-    - --providers.file.watch=true
+      - --providers.file.directory=/dynamic_confs
+      - --providers.file.watch=true
 
-    - --entrypoints.web.address=:80
-    - --entrypoints.websecure.address=:443
-    - --entrypoints.portainer.address=:9443
-    - --entrypoints.pihole.address=:8443
-    - --entrypoints.backrest.address=:9898
-    - --entrypoints.dozzle.address=:10443
-    - --entrypoints.traefik_dashboard.address=:11443
-    - --entrypoints.registry.address=:5000
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.portainer.address=:9443
+      - --entrypoints.pihole.address=:8443
+      - --entrypoints.backrest.address=:9898
+      - --entrypoints.dozzle.address=:10443
+      - --entrypoints.traefik_dashboard.address=:11443
+      - --entrypoints.registry.address=:5000
 
-    - --certificatesresolvers.ovh.acme.email=${ACME_EMAIL}
-    - --certificatesresolvers.ovh.acme.storage=/data/acme.json
-    - --certificatesresolvers.ovh.acme.dnschallenge.provider=ovh
+      - --certificatesresolvers.ovh.acme.email=${ACME_EMAIL}
+      - --certificatesresolvers.ovh.acme.storage=/data/acme.json
+      - --certificatesresolvers.ovh.acme.dnschallenge.provider=ovh
 
-    - --serverstransport.insecureskipverify=true
+      - --serverstransport.insecureskipverify=true
 
-    - --log.level=DEBUG
+      - --log.level=DEBUG
     ports:
       - 80:80
       - 443:443
@@ -58,9 +58,10 @@ services:
       IMMICH_DOMAIN: "${IMMICH_DOMAIN}"
       GRAFANA_DOMAIN: "${GRAFANA_DOMAIN}"
       INFLUXDB_DOMAIN: "${INFLUXDB_DOMAIN}"
+      PROMETHEUS_DOMAIN: "${PROMETHEUS_DOMAIN}"
       BACKREST_DOMAIN: "${BACKREST_DOMAIN}"
       DOZZLE_DOMAIN: "${DOZZLE_DOMAIN}"
-      TRAEFIK_DOMAIN: "${TRAEFIK_DOMAIN}"
+      TRAEFIK_DASHBOARD_DOMAIN: "${TRAEFIK_DASHBOARD_DOMAIN}"
       GITLAB_DOMAIN: "${GITLAB_DOMAIN}"
       REGISTRY_DOMAIN: "${REGISTRY_DOMAIN}"
       BASIC_AUTH_PASSWORD: "${BASIC_AUTH_PASSWORD}"

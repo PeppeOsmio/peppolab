@@ -15,6 +15,17 @@ http:
       tls:
         certResolver: ovh
       service: influxdb
+    
+    prometheus:
+      entryPoints:
+        - websecure
+      rule: Host("{{ env "PROMETHEUS_DOMAIN" }}")
+      tls:
+        certResolver: ovh
+      service: prometheus
+      middlewares:
+        - basic_auth
+
 
   services:
     grafana:
@@ -26,3 +37,8 @@ http:
       loadBalancer:
         servers:
           - url: "http://influxdb:8086"
+
+    prometheus:
+      loadBalancer:
+        servers:
+          - url: "http://prometheus:9090"
