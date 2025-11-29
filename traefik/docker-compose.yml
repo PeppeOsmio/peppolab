@@ -34,6 +34,11 @@ services:
 
       - --serverstransport.insecureskipverify=true
 
+      - "--entrypoints.metrics.address=:8082"
+      - "--metrics.prometheus=true"
+      - "--metrics.prometheus.entrypoint=metrics"
+      - "--metrics.prometheus.addServicesLabels=true"
+
       - --log.level=DEBUG
     ports:
       - 80:80
