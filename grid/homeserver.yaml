@@ -1,0 +1,39 @@
+server_name: "synapse.grid.example"
+report_stats: true
+
+media_store_path: /data/media_store
+
+trusted_key_servers:
+  - server_name: "matrix.org"
+
+suppress_key_server_warning: true
+
+macaroon_secret_key: "34558ff0b8f65ececd544646c5c6a2b3442d51d6affa494cec86049129bb8cf4"
+registration_shared_secret: "cbfa430918f200472815a14721770fdd697c7ea7e50f89f179ae4678ad0f7276"
+
+enable_registration: false
+enable_registration_without_verification: false
+
+database:
+  name: psycopg2
+  args:
+    database: synapse
+    user: admin
+    password: 1234
+    host: grid-postgres
+    cp_min: 5
+    cp_max: 10
+registration_requires_token: false  # Set to true to require registration tokens
+rc_messages_per_second: 50 # allow for increased location messages
+rc_message_burst_count: 10
+rc_registration:
+    per_second: 0.17
+    burst_count: 3
+
+listeners:
+  - port: 8008
+    type: http
+    tls: false
+    x_forwarded: true
+    resources:
+      - names: [client, federation]

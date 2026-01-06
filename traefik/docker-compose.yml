@@ -49,6 +49,7 @@ services:
       - 10443:10443 # dozzle
       - 11443:11443 # traefik dashboard
       - 5000:5000 # registry
+      - 3118:3118 # grid
     environment:
       ACME_EMAIL: "${ACME_EMAIL}"
       OVH_APPLICATION_KEY: "${OVH_APPLICATION_KEY}"
@@ -69,6 +70,8 @@ services:
       TRAEFIK_DASHBOARD_DOMAIN: "${TRAEFIK_DASHBOARD_DOMAIN}"
       GITLAB_DOMAIN: "${GITLAB_DOMAIN}"
       REGISTRY_DOMAIN: "${REGISTRY_DOMAIN}"
+      GRID_SYNAPSE_DOMAIN: "${GRID_SYNAPSE_DOMAIN}"
+      NAVIDROME_DOMAIN: "${NAVIDROME_DOMAIN}"
       BASIC_AUTH_PASSWORD: "${BASIC_AUTH_PASSWORD}"
     volumes:
       - ./dynamic_confs:/dynamic_confs

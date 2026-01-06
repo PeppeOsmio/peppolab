@@ -1,0 +1,20 @@
+services:
+  navidrome:
+    image: deluan/navidrome:0.59.0
+    container_name: navidrome
+    user: 1000:1000 # should be owner of volumes
+    restart: unless-stopped
+    environment: []
+      # Optional: put your config options customization here. Examples:
+      # ND_LOGLEVEL: debug
+    networks:
+      internal:
+      traefik_global:
+    volumes:
+      - "/docker_data/navidrome/volumes/data:/data"
+      - "/docker_data/navidrome/volumes/music:/music:ro"
+
+networks:
+  internal:
+  traefik_global:
+    external: true

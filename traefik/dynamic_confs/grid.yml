@@ -1,0 +1,15 @@
+http:
+  routers:
+    grid-synapse:
+      entryPoints:
+        - websecure
+      rule: Host("{{ env "GRID_SYNAPSE_DOMAIN" }}")
+      tls:
+        certResolver: ovh
+      service: grid-synapse
+
+  services:
+    grid-synapse:
+      loadBalancer:
+        servers:
+          - url: http://grid-synapse:8008

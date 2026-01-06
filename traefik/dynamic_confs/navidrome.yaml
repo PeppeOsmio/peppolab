@@ -1,0 +1,15 @@
+http:
+  routers:
+    navidrome:
+      entryPoints:
+        - websecure
+      rule: Host("{{ env "NAVIDROME_DOMAIN" }}")
+      tls:
+        certResolver: ovh
+      service: navidrome
+
+  services:
+    navidrome:
+      loadBalancer:
+        servers:
+          - url: http://navidrome:4533

@@ -1,0 +1,55 @@
+x-logging: &logging
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "10MB"
+      max-file: "10"
+
+name: grid
+    
+services:
+  grid-synapse:
+    image: matrixdotorg/synapse:latest
+    container_name: grid-synapse
+    restart: unless-stopped
+    volumes:
+      # sudo chown -R 991:991 synapse_data
+      - /docker_data/grid/volumes/synapse_data:/data
+      - /docker_data/grid/configs/homeserver.yaml:/data/homeserver.yaml
+    healthcheck:
+      test: ["CMD", "curl", "-fSs", "http://localhost:8008/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    environment:
+      VIRTUAL_HOST: synapse.grid.peppolab.giuseppebosa.eu
+    networks:
+      traefik_global:
+      internal:
+    <<: *logging
+
+  # docker exec -it grid-synapse   register_new_matrix_user   -c /data/homeserver.yaml   http://127.0.0.1:8008
+
+  grid-postgres:
+    container_name: grid-postgres
+    image: postgres:18
+    restart: unless-stopped
+    volumes:
+      - /docker_data/grid/volumes/postgres_data:/var/lib/postgresql
+    environment:
+      POSTGRES_DB: synapse
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      LANG: C.UTF-8
+      LC_COLLATE: C
+      LC_CTYPE: C
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8"
+    networks:
+      internal:
+    <<: *logging
+
+networks:
+  internal:
+  traefik_global:
+    external: true
