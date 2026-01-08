@@ -11,8 +11,23 @@ services:
       internal:
       traefik_global:
     volumes:
-      - "/docker_data/navidrome/volumes/data:/data"
-      - "/docker_data/navidrome/volumes/music:/music:ro"
+      - /docker_data/navidrome/volumes/data:/data
+      - /docker_data/navidrome/volumes/music:/music:ro
+
+  file-browser:
+    image: gtstef/filebrowser:1.1.6-beta-slim
+    environment:
+      FILEBROWSER_CONFIG: "./config.yaml"
+      FILEBROWSER_ADMIN_PASSWORD: "${FILEBROWSER_ADMIN_PASSWORD}"
+    user: 1000:1000
+    volumes:
+      - /docker_data/navidrome/volumes/music:/music
+      - /docker_data/navidrome/volumes/filebrowser_data:/home/filebrowser/data
+      - ./filebrowser/config.yaml:/home/filebrowser/config.yaml
+    networks:
+      internal:
+      traefik_global:
+    restart: unless-stopped
 
 networks:
   internal:

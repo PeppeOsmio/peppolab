@@ -7,9 +7,22 @@ http:
       tls:
         certResolver: ovh
       service: navidrome
+    
+    file-browser:
+      entryPoints:
+        - websecure
+      rule: Host("{{ env "NAVIDROME_FILEBROWSER_DOMAIN" }}")
+      tls:
+        certResolver: ovh
+      service: file-browser
 
   services:
     navidrome:
       loadBalancer:
         servers:
           - url: http://navidrome:4533
+    
+    file-browser:
+      loadBalancer:
+        servers:
+          - url: http://file-browser:80
