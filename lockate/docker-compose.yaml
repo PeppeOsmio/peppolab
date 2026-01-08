@@ -1,0 +1,74 @@
+x-logging: &logging
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "10MB"
+      max-file: "10"
+
+services:
+  postgres:
+    image: postgres:16-bullseye
+    restart: unless-stopped
+    volumes:
+      - /docker_data/lockate/volumes/postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: "lockate"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+    networks:
+      internal:
+    <<: *logging
+
+  valkey:
+    image: valkey/valkey:8.1.3-alpine
+    command: ["valkey-server", "--requirepass", "${REDIS_PASSWORD}"]
+    restart: unless-stopped
+  lockate-api:
+    image: lockate:latest
+    command: [ "java", "-jar", "lockate.jar", "--spring.profiles.active=api" ]
+    restart: unless-stopped
+    environment:
+      DB_URL: "postgresql://postgres:5432/lockate"
+      DB_USERNAME: "${POSTGRES_USER}"
+      DB_PASSWORD: "${POSTGRES_PASSWORD}"
+      REDIS_HOST: "valkey"
+      REDIS_PORT: "6379"
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
+      REQUIRE_API_KEY: "${REQUIRE_API_KEY}"
+    networks:
+      internal:
+      traefik_global:
+    <<: *logging
+
+  lockate-jobs:
+    image: lockate:latest
+    command: [ "java", "-jar", "lockate.jar", "--spring.profiles.active=jobs" ]
+    restart: unless-stopped
+    environment:
+      DB_URL: "postgresql://postgres:5432/lockate"
+      DB_USERNAME: "${POSTGRES_USER}"
+      DB_PASSWORD: "${POSTGRES_PASSWORD}"
+      REDIS_HOST: "valkey"
+      REDIS_PORT: "6379"
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
+      REQUIRE_API_KEY: "${REQUIRE_API_KEY}"
+    networks:
+      internal:
+    <<: *logging
+
+  liquibase:
+    image: lockate-liquibase:latest
+    restart: on-failure
+    environment:
+      LIQUIBASE_COMMAND_URL: "jdbc:postgresql://postgres:5432/lockate"
+      LIQUIBASE_COMMAND_USERNAME: "${POSTGRES_USER}"
+      LIQUIBASE_COMMAND_PASSWORD: "${POSTGRES_PASSWORD}"
+      LIQUIBASE_COMMAND_CHANGELOG_FILE: changelog/db.changelog-master.yaml
+    networks:
+      internal:
+    <<: *logging
+
+networks:
+  internal:
+  traefik_global:
+    external: true

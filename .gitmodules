@@ -1,0 +1,3 @@
+[submodule "lockate/lockate_backend"]
+	path = lockate/lockate_backend
+	url = https://github.com/PeppeOsmio/lockate_backend

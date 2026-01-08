@@ -1,0 +1,15 @@
+http:
+  routers:
+    lockate:
+      entryPoints:
+        - websecure
+      rule: Host("{{ env "LOCKATE_DOMAIN" }}")
+      tls:
+        certResolver: ovh
+      service: lockate
+
+  services:
+    lockate:
+      loadBalancer:
+        servers:
+          - url: "http://lockate-api:3118"
