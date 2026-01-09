@@ -1,0 +1,25 @@
+x-logging: &logging
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "10MB"
+      max-file: "10"
+
+services:
+  adguardhome:
+    container_name: adguardhome
+    image: adguard/adguardhome:v0.108.0-b.80
+    restart: unless-stopped
+    volumes:
+      - /docker_data/adguardhome/volumes/confdir:/opt/adguardhome/conf
+      - /docker_data/adguardhome/volumes/workdir:/opt/adguardhome/work
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+    networks:
+      traefik_global:
+    <<: *logging
+
+networks:
+  traefik_global:
+    external: true

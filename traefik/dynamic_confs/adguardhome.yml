@@ -1,23 +1,23 @@
 http:
   routers:
-    pihole:
+    adguardhome:
       entryPoints:
         - websecure
-      rule: Host("{{ env "PIHOLE_DOMAIN" }}")
+      rule: Host("{{ env "ADGUARDHOME_DOMAIN" }}")
       tls:
         certResolver: ovh
-      service: pihole
+      service: adguardhome
   
-    pihole_no_domain:
+    adguardhome_no_domain:
       entryPoints:
-        - pihole
+        - adguardhome
       rule: HostRegexp(`.*`)
       tls:
         certResolver: ovh
-      service: pihole
+      service: adguardhome
 
   services:
-    pihole:
+    adguardhome:
       loadBalancer:
         servers:
-          - url: http://pihole
+          - url: http://adguardhome
