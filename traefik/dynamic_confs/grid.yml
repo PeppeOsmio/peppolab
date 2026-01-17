@@ -2,7 +2,7 @@ http:
   routers:
     grid-synapse:
       entryPoints:
-        - websecure
+        - grid
       rule: Host("{{ env "GRID_SYNAPSE_DOMAIN" }}")
       tls:
         certResolver: ovh

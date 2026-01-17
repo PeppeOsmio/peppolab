@@ -8,6 +8,13 @@ http:
         certResolver: ovh
       service: lockate
 
+    lockate-no-domain:
+      entryPoints:
+        - lockate
+      rule: Host(`.*`)
+      tls:
+      service: lockate      
+
   services:
     lockate:
       loadBalancer:

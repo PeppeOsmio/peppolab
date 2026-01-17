@@ -27,6 +27,8 @@ services:
       - --entrypoints.dozzle.address=:10443
       - --entrypoints.traefik_dashboard.address=:11443
       - --entrypoints.registry.address=:5000
+      # - --entrypoints.lockate.address=:3118
+      # - --entrypoints.grid.address=:3119
 
       - --certificatesresolvers.ovh.acme.email=${ACME_EMAIL}
       - --certificatesresolvers.ovh.acme.storage=/data/acme.json
@@ -49,7 +51,8 @@ services:
       - 10443:10443 # dozzle
       - 11443:11443 # traefik dashboard
       - 5000:5000 # registry
-      - 3118:3118 # grid
+      # - 3118:3118 # lockate
+      # - 3119:3119 # grid
     environment:
       ACME_EMAIL: "${ACME_EMAIL}"
       OVH_APPLICATION_KEY: "${OVH_APPLICATION_KEY}"

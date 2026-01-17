@@ -38,6 +38,8 @@ services:
       REDIS_PORT: "6379"
       REDIS_PASSWORD: "${REDIS_PASSWORD}"
       REQUIRE_API_KEY: "${REQUIRE_API_KEY}"
+    ports:
+      - 3118:3118
     networks:
       internal:
       traefik_global:
