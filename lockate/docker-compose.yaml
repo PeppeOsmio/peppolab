@@ -23,6 +23,9 @@ services:
     image: valkey/valkey:8.1.3-alpine
     command: ["valkey-server", "--requirepass", "${REDIS_PASSWORD}"]
     restart: unless-stopped
+    networks:
+      internal:
+
   lockate-api:
     image: lockate:latest
     command: [ "java", "-jar", "lockate.jar", "--spring.profiles.active=api" ]
@@ -63,7 +66,7 @@ services:
       LIQUIBASE_COMMAND_URL: "jdbc:postgresql://postgres:5432/lockate"
       LIQUIBASE_COMMAND_USERNAME: "${POSTGRES_USER}"
       LIQUIBASE_COMMAND_PASSWORD: "${POSTGRES_PASSWORD}"
-      LIQUIBASE_COMMAND_CHANGELOG_FILE: changelog/db.changelog-master.yaml
+      LIQUIBASE_COMMAND_CHANGELOG_FILE: src/main/resources/db/changelog/db.changelog-master.yml
     networks:
       internal:
     <<: *logging
