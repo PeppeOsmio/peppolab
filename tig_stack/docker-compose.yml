@@ -78,10 +78,11 @@ services:
   node-exporter:
     image: prom/node-exporter:v1.10.2
     container_name: node-exporter
+    command:
+      - '--web.listen-address=172.17.0.1:9100'
     volumes:
       - /:/host:ro,rslave
-    networks:
-      - internal
+    network_mode: host
     restart: unless-stopped
     pid: host
     <<: *logging
