@@ -1,12 +1,21 @@
 #!/bin/bash
 
-if [ -z "$1" ]; then
+set -e
+
+if [ -z "${1:-}" ]; then
     echo "Provide compose name as first argument"
     exit 1
 fi
 
-COMPOSE_NAME="$1"
+COMPOSE_NAME="${1}"
+
+SNAPSHOT_PATH="/docker_snapshots/${COMPOSE_NAME}"
 
 set -x
 
-btrfs subvolume delete /docker_snapshots/${COMPOSE_NAME}
+# Delete snapshot only if it exists
+if btrfs subvolume show "$SNAPSHOT_PATH" &>/dev/null; then
+    btrfs subvolume delete "$SNAPSHOT_PATH"
+else
+    echo "Snapshot $SNAPSHOT_PATH does not exist, nothing to delete"
+fi

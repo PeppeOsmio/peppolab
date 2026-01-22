@@ -25,6 +25,8 @@ services:
       - /docker_snapshots:/docker_snapshots
       - ./scripts:/scripts
 
+      - /docker_data/backrest/configs/ssh:/root/.ssh
+
       - /docker_data/backrest/volumes/backrest_data:/data
       - /docker_data/backrest/volumes/config:/config
       - /docker_data/backrest/volumes/cache:/cache
