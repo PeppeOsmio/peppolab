@@ -27,7 +27,9 @@ services:
       internal:
 
   lockate-api:
-    image: lockate:latest
+    build:
+      context: lockate_backend
+      dockerfile: Dockerfile
     command: [ "java", "-jar", "lockate.jar", "--spring.profiles.active=api" ]
     restart: unless-stopped
     environment:
@@ -46,7 +48,9 @@ services:
     <<: *logging
 
   lockate-jobs:
-    image: lockate:latest
+    build:
+      context: lockate_backend
+      dockerfile: Dockerfile
     command: [ "java", "-jar", "lockate.jar", "--spring.profiles.active=jobs" ]
     restart: unless-stopped
     environment:
@@ -62,7 +66,9 @@ services:
     <<: *logging
 
   liquibase:
-    image: lockate-liquibase:latest
+    build:
+      context: lockate_backend
+      dockerfile: liquibase.Dockerfile
     restart: on-failure
     environment:
       LIQUIBASE_COMMAND_URL: "jdbc:postgresql://postgres:5432/lockate"
