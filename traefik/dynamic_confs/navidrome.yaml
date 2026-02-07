@@ -16,6 +16,14 @@ http:
         certResolver: ovh
       service: file-browser
 
+    slskd:
+      entryPoints:
+        - websecure
+      rule: Host("{{ env "NAVIDROME_SLSKD_DOMAIN" }}")
+      tls:
+        certResolver: ovh
+      service: slskd
+
   services:
     navidrome:
       loadBalancer:
@@ -26,3 +34,8 @@ http:
       loadBalancer:
         servers:
           - url: http://file-browser:80
+      
+    slskd:
+      loadBalancer:
+        servers:
+          - url: http://slskd:5030

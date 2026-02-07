@@ -14,6 +14,23 @@ services:
       - /docker_data/navidrome/volumes/data:/data
       - /docker_data/navidrome/volumes/music:/music:ro
 
+  slskd:
+    image: slskd/slskd
+    container_name: slskd
+    user: 1000:1000 # should be owner of volumes
+    environment:
+      - SLSKD_REMOTE_CONFIGURATION=true
+    volumes:
+      - /docker_data/navidrome/volumes/slskd_data:/app
+      - /docker_data/navidrome/volumes/music:/music
+      - /docker_data/navidrome/configs/slskd.yml:/app/slskd.yml
+    restart: unless-stopped
+    ports:
+      - 50300:50300
+    networks:
+      internal:
+      traefik_global:
+
   file-browser:
     image: gtstef/filebrowser:1.1.6-beta-slim
     environment:
