@@ -1,0 +1,9 @@
+services:
+  sftp:
+    image: atmoz/sftp
+    volumes:
+      - /docker_data/navidrome/volumes/music:/home/${SFTP_USER}/docker_data/navidrome/volumes/music
+    command: "${SFTP_USER}:${SFTP_PASSWORD}:1000"
+    ports:
+      - 2222:22
+
