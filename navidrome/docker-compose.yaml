@@ -45,6 +45,21 @@ services:
       internal:
       traefik_global:
     restart: unless-stopped
+  
+  beets:
+    image: ghcr.io/linuxserver/beets:latest
+    container_name: beets
+    command: ["sleep", "infinity"]
+    volumes:
+      - ./beets/config.yaml:/config/config.yaml
+      - /docker_data/navidrome/volumes/beets_config:/config
+      - /docker_data/navidrome/volumes/music:/music
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=UTC
+    stdin_open: true
+    tty: true
 
 networks:
   internal:

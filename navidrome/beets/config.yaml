@@ -1,0 +1,20 @@
+directory: /music
+library: /config/library.db
+
+plugins: lyrics
+
+match:
+  distance_weights:
+    track_length: 0.0
+
+import:
+  move: no
+  copy: no
+  write: yes
+  timid: yes
+
+lyrics:
+  auto: no
+  synced: yes
+  fallback: yes
+  write: yes
