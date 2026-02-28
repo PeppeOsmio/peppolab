@@ -15,7 +15,7 @@ services:
       - /docker_data/navidrome/volumes/music:/music:ro
 
   slskd:
-    image: slskd/slskd
+    image: slskd/slskd:0.24.4
     container_name: slskd
     user: 1000:1000 # should be owner of volumes
     environment:
