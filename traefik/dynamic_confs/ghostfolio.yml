@@ -1,0 +1,15 @@
+http:
+  routers:
+    ghostfolio:
+      entryPoints:
+        - websecure
+      rule: Host("{{ env "GHOSTFOLIO_DOMAIN" }}")
+      tls:
+        certResolver: ovh
+      service: ghostfolio
+
+  services:
+    ghostfolio:
+      loadBalancer:
+        servers:
+          - url: http://ghostfolio:3333
