@@ -1,0 +1,22 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    environment:
+      DOMAIN: "https://vaultwarden.peppolab.giuseppebosa.eu"
+    volumes:
+      - /docker_data/vaultwarden/volumes/vw_data:/data/
+    networks:
+      - internal
+      - traefik_global
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10MB"
+        max-file: "10"
+
+networks:
+  internal:
+  traefik_global:
+    external: true

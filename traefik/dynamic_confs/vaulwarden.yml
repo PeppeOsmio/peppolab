@@ -1,0 +1,15 @@
+http:
+  routers:
+    vaultwarden:
+      entryPoints:
+        - websecure
+      rule: Host("{{ env "VAULTWARDEN_DOMAIN" }}")
+      tls:
+        certResolver: ovh
+      service: vaultwarden
+
+  services:
+    vaultwarden:
+      loadBalancer:
+        servers:
+          - url: http://vaultwarden:80
