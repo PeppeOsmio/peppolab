@@ -28,9 +28,8 @@ services:
 
   lockate-api:
     build:
-      context: lockate_backend
+      context: lockate/backend
       dockerfile: Dockerfile
-    command: [ "java", "-jar", "lockate.jar", "--spring.profiles.active=api" ]
     restart: unless-stopped
     environment:
       DB_URL: "postgresql://postgres:5432/lockate"
@@ -45,38 +44,6 @@ services:
     networks:
       internal:
       traefik_global:
-    <<: *logging
-
-  lockate-jobs:
-    build:
-      context: lockate_backend
-      dockerfile: Dockerfile
-    command: [ "java", "-jar", "lockate.jar", "--spring.profiles.active=jobs" ]
-    restart: unless-stopped
-    environment:
-      DB_URL: "postgresql://postgres:5432/lockate"
-      DB_USERNAME: "${POSTGRES_USER}"
-      DB_PASSWORD: "${POSTGRES_PASSWORD}"
-      REDIS_HOST: "valkey"
-      REDIS_PORT: "6379"
-      REDIS_PASSWORD: "${REDIS_PASSWORD}"
-      REQUIRE_API_KEY: "${REQUIRE_API_KEY}"
-    networks:
-      internal:
-    <<: *logging
-
-  liquibase:
-    build:
-      context: lockate_backend
-      dockerfile: liquibase.Dockerfile
-    restart: on-failure
-    environment:
-      LIQUIBASE_COMMAND_URL: "jdbc:postgresql://postgres:5432/lockate"
-      LIQUIBASE_COMMAND_USERNAME: "${POSTGRES_USER}"
-      LIQUIBASE_COMMAND_PASSWORD: "${POSTGRES_PASSWORD}"
-      LIQUIBASE_COMMAND_CHANGELOG_FILE: src/main/resources/db/changelog/db.changelog-master.yml
-    networks:
-      internal:
     <<: *logging
 
 networks:
