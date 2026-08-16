@@ -22,6 +22,14 @@ VPN server for secure remote access to the homelab from outside the local networ
 | --- | --- |
 | `wireguard` | WireGuard VPN server. Peer configuration (count, DNS, subnets, allowed IPs) is driven entirely by environment variables, with auto-generated peer configs accessible via logs. |
 
+### [Tailscale](https://tailscale.com/)
+
+Subnet router that exposes the whole home network to a Tailscale tailnet, replacing WireGuard for remote access — no router port-forwarding or dynamic DNS required, since Tailscale handles NAT traversal itself.
+
+| Container | Description |
+| --- | --- |
+| `tailscale` | Runs as a subnet router, advertising the home LAN CIDR (`ADVERTISE_ROUTES`) to the tailnet. Any device signed into the same tailnet can reach home network IPs once the advertised route is approved in the [Tailscale admin console](https://login.tailscale.com/admin/machines). |
+
 ### [Pi-hole](https://pi-hole.net/)
 
 Network-wide DNS resolver and ad blocker.
@@ -203,7 +211,7 @@ Repeat for every stack that has a `docs/.env`:
 
 ```text
 traefik   nextcloud   immich   gitlab   pihole
-portainer   tig_stack   vaultwarden   wireguard
+portainer   tig_stack   vaultwarden   wireguard   tailscale
 ```
 
 The most important file is [`traefik/docs/.env`](traefik/docs/.env). It holds the OVH API credentials and the public domain name for every service:
@@ -242,12 +250,14 @@ cd traefik && docker compose up -d && cd ..
 Then bring up the remaining stacks in any order:
 
 ```bash
-for stack in pihole wireguard nextcloud immich navidrome ghostfolio gitlab vaultwarden backrest sftp lockate portainer dozzle tig_stack; do
+for stack in pihole wireguard tailscale nextcloud immich navidrome ghostfolio gitlab vaultwarden backrest sftp lockate portainer dozzle tig_stack; do
   docker compose -p "$stack" -f "$stack/docker-compose.yml" up -d
 done
 ```
 
 ### 7. Service-specific notes
+
+**Tailscale** — generate an auth key at [login.tailscale.com/admin/settings/keys](https://login.tailscale.com/admin/settings/keys) (reusable, and pre-authorized if your tailnet requires it) and put it in `TS_AUTHKEY`. Set `ADVERTISE_ROUTES` to your home LAN's CIDR (e.g. `192.168.1.0/24`). After the container starts, go to the [admin console's Machines page](https://login.tailscale.com/admin/machines), open the `tailscale` machine, and approve the advertised subnet route — routes are not usable until approved. Install the Tailscale client on any device that needs remote access and sign into the same tailnet; no router port-forward or dynamic DNS entry is needed.
 
 **GitLab Runner** — after GitLab is fully initialised, register the runner:
 

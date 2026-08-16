@@ -1,0 +1,30 @@
+x-logging: &logging
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "10MB"
+      max-file: "10"
+
+name: tailscale
+
+services:
+  tailscale:
+    image: tailscale/tailscale:v1.80.2
+    container_name: tailscale
+    restart: unless-stopped
+    hostname: ${TS_HOSTNAME}
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    environment:
+      TS_AUTHKEY: "${TS_AUTHKEY}"
+      TS_STATE_DIR: /var/lib/tailscale
+      TS_USERSPACE: "false"
+      TS_EXTRA_ARGS: "--advertise-routes=${ADVERTISE_ROUTES} --accept-dns=false"
+    volumes:
+      - /docker_data/tailscale/volumes/state:/var/lib/tailscale
+      - /dev/net/tun:/dev/net/tun
+    sysctls:
+      - net.ipv4.ip_forward=1
+      - net.ipv6.conf.all.forwarding=1
+    <<: *logging
