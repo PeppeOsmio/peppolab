@@ -14,17 +14,9 @@ The single entry point for all HTTP/HTTPS traffic. Handles TLS termination with 
 | --- | --- |
 | `traefik` | Reverse proxy routing requests to all backend services. Exposes dedicated ports for services that can't use the standard 443 entrypoint (Portainer, Backrest, Dozzle). Prometheus metrics are exposed on a separate entrypoint. Dynamic configuration is loaded from the [`traefik/dynamic_confs/`](traefik/dynamic_confs/) directory. |
 
-### [WireGuard](https://www.wireguard.com/)
-
-VPN server for secure remote access to the homelab from outside the local network.
-
-| Container | Description |
-| --- | --- |
-| `wireguard` | WireGuard VPN server. Peer configuration (count, DNS, subnets, allowed IPs) is driven entirely by environment variables, with auto-generated peer configs accessible via logs. |
-
 ### [Tailscale](https://tailscale.com/)
 
-Subnet router that exposes the whole home network to a Tailscale tailnet, replacing WireGuard for remote access — no router port-forwarding or dynamic DNS required, since Tailscale handles NAT traversal itself.
+Subnet router that exposes the whole home network to a Tailscale tailnet, providing secure remote access to the homelab — no router port-forwarding or dynamic DNS required, since Tailscale handles NAT traversal itself.
 
 | Container | Description |
 | --- | --- |
@@ -219,7 +211,7 @@ Repeat for every stack that has a `docs/.env`:
 
 ```text
 traefik   nextcloud   immich   gitlab   pihole
-portainer   tig_stack   vaultwarden   wireguard   tailscale
+portainer   tig_stack   vaultwarden   tailscale
 ```
 
 The most important file is [`traefik/docs/.env`](traefik/docs/.env). It holds the OVH API credentials and the public domain name for every service:
@@ -264,7 +256,7 @@ cd traefik && docker compose up -d && cd ..
 Then bring up the remaining stacks in any order:
 
 ```bash
-for stack in pihole wireguard tailscale nextcloud immich navidrome ghostfolio gitlab vaultwarden backrest sftp lockate portainer dozzle tig_stack; do
+for stack in pihole tailscale nextcloud immich navidrome ghostfolio gitlab vaultwarden backrest sftp lockate portainer dozzle tig_stack; do
   docker compose -p "$stack" -f "$stack/docker-compose.yml" up -d
 done
 ```

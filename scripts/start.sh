@@ -38,7 +38,6 @@ ORDER=(
   dozzle
   tig_stack
   backrest
-  wireguard
   nextcloud
   immich
   navidrome
