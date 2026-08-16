@@ -9,7 +9,7 @@ name: tailscale
 
 services:
   tailscale:
-    image: tailscale/tailscale:v1.80.2
+    image: tailscale/tailscale:v1.102.2
     container_name: tailscale
     restart: unless-stopped
     hostname: ${TS_HOSTNAME}
