@@ -190,7 +190,15 @@ All persistent data lives under `/docker_data`. Each stack folder is its own BTR
 
 ### 4. Configure environment variables
 
-Each stack that needs configuration has a `docs/.env` template. The `.env` file itself can live either directly in the stack folder or in `/docker_data/<stack>/configs/` and be symlinked in:
+Steps 3, 4, and 5 can be automated by running [`scripts/install.sh`](scripts/install.sh) as root. For every stack with a `docker-compose.yml`/`.yaml`, it creates `/docker_data/<stack>` as a BTRFS subvolume (falling back to a plain directory if `/docker_data` isn't BTRFS), creates `configs/` and `volumes/` inside it, and — for stacks with a `docs/.env` template — copies it to `/docker_data/<stack>/configs/.env` and symlinks `<stack>/.env` to it (Option B below). It also applies the ownership fixes from step 5 (Navidrome, Prometheus). It never overwrites existing files, so it's safe to re-run. Use `--dry-run` to preview, and `--data-root` to point somewhere other than `/docker_data`:
+
+```bash
+sudo ./scripts/install.sh
+```
+
+You'll still need to edit each generated `configs/.env` with real values afterwards.
+
+Otherwise, configuration can be done by hand. Each stack that needs configuration has a `docs/.env` template. The `.env` file itself can live either directly in the stack folder or in `/docker_data/<stack>/configs/` and be symlinked in:
 
 **Option A — keep it in the repo folder:**
 
@@ -229,7 +237,7 @@ The most important file is [`traefik/docs/.env`](traefik/docs/.env). It holds th
 
 ### 5. Fix volume ownership
 
-Some containers run as non-root users and require the data directories to be owned by the right UID before first start:
+Handled automatically by `scripts/install.sh` (see step 4). To do it by hand instead: some containers run as non-root users and require the data directories to be owned by the right UID before first start:
 
 ```bash
 # Navidrome and its companions run as 1000:1000
@@ -241,7 +249,13 @@ sudo chown -R 65534:65534 /docker_data/tig_stack/volumes/prometheus
 
 ### 6. Start services
 
-Start Traefik first. It creates the `traefik_global` Docker network that every other stack connects to:
+Run [`scripts/start.sh`](scripts/start.sh) to bring up every stack in the right order — Tailscale, Traefik, Pi-hole, Portainer, Dozzle, TIG stack, Backrest, then the rest. Traefik has to precede Pi-hole/Portainer/Dozzle/TIG stack/Backrest since it creates the `traefik_global` Docker network they all join. Use `--dry-run` to preview the commands it would run:
+
+```bash
+./scripts/start.sh
+```
+
+Or do it by hand. Start Traefik first, since it creates the `traefik_global` Docker network that every other stack connects to:
 
 ```bash
 cd traefik && docker compose up -d && cd ..
