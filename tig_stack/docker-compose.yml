@@ -63,7 +63,7 @@ services:
   #   <<: *logging
 
   prometheus:
-    image: prom/prometheus:v3.7.3
+    image: prom/prometheus:v3.13.3
     container_name: prometheus
     volumes:
       - /docker_data/tig_stack/configs/prometheus:/etc/prometheus
@@ -76,7 +76,7 @@ services:
     <<: *logging
 
   node-exporter:
-    image: prom/node-exporter:v1.10.2
+    image: prom/node-exporter:v1.12.1
     container_name: node-exporter
     command:
       - '--web.listen-address=172.17.0.1:9100'
@@ -111,7 +111,7 @@ services:
 
   grafana:
     container_name: grafana
-    image: grafana/grafana-oss:12.2.0-17142428006
+    image: grafana/grafana-oss:13.0.2
     restart: unless-stopped
     volumes:
       - /docker_data/tig_stack/volumes/grafana_data:/var/lib/grafana

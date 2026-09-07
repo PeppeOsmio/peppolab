@@ -1,6 +1,6 @@
 services:
   navidrome:
-    image: deluan/navidrome:0.62.0
+    image: deluan/navidrome:0.63.2
     container_name: navidrome
     user: 1000:1000 # should be owner of volumes
     restart: unless-stopped
@@ -15,7 +15,7 @@ services:
       - /docker_data/navidrome/volumes/music:/music:ro
 
   slskd:
-    image: slskd/slskd:0.25.1
+    image: slskd/slskd:0.26.0
     container_name: slskd
     user: 1000:1000 # should be owner of volumes
     environment:
