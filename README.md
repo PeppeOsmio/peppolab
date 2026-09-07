@@ -75,15 +75,6 @@ Open-source wealth management and portfolio tracking dashboard.
 | `gf-postgres` | PostgreSQL database storing all portfolio data, transactions, and user settings. |
 | `gf-redis` | Redis cache used for session management and API response caching. |
 
-### [GitLab](https://about.gitlab.com/)
-
-Fully self-hosted Git platform with built-in CI/CD pipelines.
-
-| Container | Description |
-| --- | --- |
-| `gitlab` | GitLab Community Edition. Provides repository hosting, merge requests, issue tracking, the container registry, and the CI/CD pipeline configuration UI. Runs with its internal NGINX disabled so Traefik handles TLS. |
-| `gitlab-runner` | CI/CD job executor registered to the self-hosted GitLab instance. Spawns Docker-in-Docker containers to run pipeline jobs. |
-
 ### [Vaultwarden](https://github.com/dani-garcia/vaultwarden)
 
 Lightweight, self-hosted [Bitwarden](https://bitwarden.com)-compatible password manager server. Works with all official Bitwarden clients: mobile apps for Android and iOS, desktop apps for Windows, macOS, and Linux, and browser extensions for all major browsers.
@@ -210,7 +201,7 @@ ln -s /docker_data/traefik/configs/.env traefik/.env
 Repeat for every stack that has a `docs/.env`:
 
 ```text
-traefik   nextcloud   immich   gitlab   pihole
+traefik   nextcloud   immich   pihole
 portainer   tig_stack   vaultwarden   tailscale
 ```
 
@@ -256,7 +247,7 @@ cd traefik && docker compose up -d && cd ..
 Then bring up the remaining stacks in any order:
 
 ```bash
-for stack in pihole tailscale nextcloud immich navidrome ghostfolio gitlab vaultwarden backrest sftp lockate portainer dozzle tig_stack; do
+for stack in pihole tailscale nextcloud immich navidrome ghostfolio vaultwarden backrest sftp lockate portainer dozzle tig_stack; do
   docker compose -p "$stack" -f "$stack/docker-compose.yml" up -d
 done
 ```
@@ -264,12 +255,6 @@ done
 ### 7. Service-specific notes
 
 **Tailscale** — generate an auth key at [login.tailscale.com/admin/settings/keys](https://login.tailscale.com/admin/settings/keys) (reusable, and pre-authorized if your tailnet requires it) and put it in `TS_AUTHKEY`. Set `ADVERTISE_ROUTES` to your home LAN's CIDR (e.g. `192.168.1.0/24`). After the container starts, go to the [admin console's Machines page](https://login.tailscale.com/admin/machines), open the `tailscale` machine, and approve the advertised subnet route — routes are not usable until approved. Install the Tailscale client on any device that needs remote access and sign into the same tailnet; no router port-forward or dynamic DNS entry is needed.
-
-**GitLab Runner** — after GitLab is fully initialised, register the runner:
-
-```bash
-docker exec -it gitlab-runner gitlab-runner register
-```
 
 **Backrest (SFTP remote)** — place the SSH key pair in `/docker_data/backrest/configs/ssh/`, then set the env variable `RESTIC_SFTP_ARGS="-i /root/.ssh/id_ed25519 -o IdentitiesOnly=yes"` in the Backrest UI when creating the repository. The [`before_backup.sh`](backrest/scripts/before_backup.sh) and [`after_backup.sh`](backrest/scripts/after_backup.sh) scripts handle BTRFS snapshotting around each backup run.
 

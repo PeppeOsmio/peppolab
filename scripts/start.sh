@@ -42,7 +42,6 @@ ORDER=(
   immich
   navidrome
   ghostfolio
-  gitlab
   vaultwarden
   sftp
   lockate
