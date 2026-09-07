@@ -10,7 +10,7 @@ services:
     image: prom/prometheus:v3.13.3
     container_name: prometheus
     volumes:
-      - /docker_data/tig_stack/configs/prometheus:/etc/prometheus
+      - ./prometheus:/etc/prometheus
       # sudo chown -R 65534:65534 /docker_data/tig_stack/volumes/prometheus
       - /docker_data/tig_stack/volumes/prometheus:/prometheus
     networks:
@@ -60,6 +60,7 @@ services:
     volumes:
       - /docker_data/tig_stack/volumes/grafana_data:/var/lib/grafana
       - /docker_data/tig_stack/volumes/grafana_logs:/var/log/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
     environment:
       GF_SECURITY_ADMIN_USER: "${GF_SECURITY_ADMIN_USER}"
       GF_SECURITY_ADMIN_PASSWORD: "${GF_SECURITY_ADMIN_PASSWORD}"
