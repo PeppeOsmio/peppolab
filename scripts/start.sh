@@ -72,11 +72,11 @@ start_stack() {
 
   echo "==> $stack"
   if [[ "$DRY_RUN" -eq 1 ]]; then
-    echo "  + docker compose -p $stack -f $compose_file up -d"
+    echo "  + docker compose -p $stack -f $compose_file up -d --build"
     return
   fi
 
-  if docker compose -p "$stack" -f "$compose_file" up -d; then
+  if docker compose -p "$stack" -f "$compose_file" up -d --build; then
     STARTED+=("$stack")
   else
     FAILED+=("$stack")
