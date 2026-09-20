@@ -10,7 +10,7 @@ name: "dozzle"
 services:
   dozzle:
     container_name: dozzle
-    image: amir20/dozzle:pr-3718
+    image: amir20/dozzle:pr-5193
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
