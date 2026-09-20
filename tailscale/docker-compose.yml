@@ -21,6 +21,7 @@ services:
       TS_STATE_DIR: /var/lib/tailscale
       TS_USERSPACE: "false"
       TS_EXTRA_ARGS: "--advertise-routes=${ADVERTISE_ROUTES} --accept-dns=false"
+      TS_DEBUG_FIREWALL_MODE: "nftables"
     volumes:
       - /docker_data/tailscale/volumes/state:/var/lib/tailscale
       - /dev/net/tun:/dev/net/tun
