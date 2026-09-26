@@ -101,15 +101,14 @@ Simple SFTP server for direct file transfer access.
 
 ### [Lockate](lockate/)
 
-Custom Spring Boot application, split into an API service and a background jobs service.
+Custom Spring Boot application.
 
 | Container | Description |
 | --- | --- |
 | `lockate-api` | REST API server exposing the Lockate application endpoints. |
-| `lockate-jobs` | Background job runner for the same application, using a separate Spring profile to avoid running scheduled tasks in the API pods. |
+| `lockate-admin-ui` | Web admin UI for managing anonymous groups and API keys. Exposed directly on port `3119`, not routed through Traefik. |
 | `postgres` | PostgreSQL database for Lockate's persistent data. |
-| `valkey` | Valkey (Redis-compatible) cache used by both the API and job services. |
-| `liquibase` | Runs [Liquibase](https://www.liquibase.org) database migrations on startup (restarts on failure until the database is ready), keeping the schema in sync with the application. |
+| `valkey` | Valkey (Redis-compatible) cache used by the API. |
 
 ### [Portainer](https://www.portainer.io/)
 
