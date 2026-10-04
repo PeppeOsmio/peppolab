@@ -27,9 +27,7 @@ services:
       internal:
 
   lockate-api:
-    build:
-      context: lockate/backend
-      dockerfile: Dockerfile
+    image: peppeosmio/lockate-backend:latest-native
     restart: unless-stopped
     environment:
       DB_URL: "postgresql://postgres:5432/lockate"
@@ -50,7 +48,7 @@ services:
 
   lockate-admin-ui:
     build:
-      context: lockate/admin_ui
+      context: peppeosmio/lockate-admin-ui:latest
       dockerfile: Dockerfile
     restart: unless-stopped
     environment:
