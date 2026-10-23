@@ -10,7 +10,7 @@ name: nextcloud
 services:
   nextcloud:
     container_name: nextcloud
-    image: nextcloud:35.0.0-apache
+    image: nextcloud:35.0.2-apache
     restart: unless-stopped
     volumes:
       - /docker_data/nextcloud/volumes/nextcloud_src:/var/www/html
@@ -42,7 +42,7 @@ services:
 
   nextcloud-cron:
     container_name: nextcloud-cron
-    image: nextcloud:35.0.0-fpm
+    image: nextcloud:35.0.2-fpm
     restart: unless-stopped
     entrypoint: /cron.sh
     volumes:
@@ -59,7 +59,7 @@ services:
   # "Client Push" from the Nextcloud app store
   nextcloud-notify-push:
     container_name: nextcloud-notify-push
-    image: nextcloud:35.0.0-fpm
+    image: nextcloud:35.0.2-fpm
     restart: unless-stopped
     entrypoint: /var/www/html/custom_apps/notify_push/bin/x86_64/notify_push /var/www/html/config/config.php
     networks:
@@ -93,7 +93,7 @@ services:
 
   valkey-nextcloud:
     container_name: valkey-nextcloud
-    image: valkey/valkey:8.1.3-alpine
+    image: valkey/valkey:9.1.2-alpine
     command: ["valkey-server", "--requirepass", "${VALKEY_PASSWORD}"]
     restart: unless-stopped
     networks:
@@ -102,7 +102,7 @@ services:
     
   collabora-nextcloud:
     container_name: collabora-nextcloud
-    image: collabora/code:25.04.6.1.1
+    image: collabora/code:26.04.5.2.1
     restart: unless-stopped
     environment:
       extra_params: "--o:ssl.enable=false --o:ssl.termination=true"
