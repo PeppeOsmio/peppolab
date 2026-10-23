@@ -27,7 +27,7 @@ services:
       internal:
 
   lockate-api:
-    image: peppeosmio/lockate-backend:latest-native
+    image: peppeosmio/lockate-backend:0.1.1
     restart: unless-stopped
     environment:
       DB_URL: "postgresql://postgres:5432/lockate"
@@ -47,9 +47,7 @@ services:
     <<: *logging
 
   lockate-admin-ui:
-    build:
-      context: peppeosmio/lockate-admin-ui:latest
-      dockerfile: Dockerfile
+    image: peppeosmio/lockate-admin-ui:0.1.1
     restart: unless-stopped
     environment:
       VITE_API_BASE_URL: "${VITE_API_BASE_URL}"
