@@ -1,6 +1,6 @@
 services:
   sftp:
-    image: atmoz/sftp
+    image: atmoz/sftp:debian@sha256:8650a2a28e2246fc53e684873e6e03204d44a06b4ea7147670ef56cc50a9a513
     volumes:
       - /docker_data/navidrome/volumes/music:/home/${SFTP_USER}/docker_data/navidrome/volumes/music
     restart: unless-stopped

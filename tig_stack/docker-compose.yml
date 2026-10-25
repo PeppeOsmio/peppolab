@@ -7,7 +7,7 @@ x-logging: &logging
 
 services:
   prometheus:
-    image: prom/prometheus:v3.13.3
+    image: prom/prometheus:v3.15.1
     container_name: prometheus
     volumes:
       - ./prometheus:/etc/prometheus
@@ -40,7 +40,7 @@ services:
   #   restart: unless-stopped
 
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:latest
+    image: ghcr.io/google/cadvisor:v0.60.6
     container_name: cadvisor
     restart: unless-stopped
     volumes:
@@ -55,7 +55,7 @@ services:
 
   grafana:
     container_name: grafana
-    image: grafana/grafana-oss:13.0.2
+    image: grafana/grafana:13.2.4
     restart: unless-stopped
     volumes:
       - /docker_data/tig_stack/volumes/grafana_data:/var/lib/grafana

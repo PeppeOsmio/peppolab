@@ -78,7 +78,7 @@ services:
 
   postgres-nextcloud:
     container_name: postgres-nextcloud
-    image: postgres:16.6
+    image: postgres:16.15-bookworm
     restart: unless-stopped
     volumes:
       - /docker_data/nextcloud/volumes/postgres_data:/var/lib/postgresql

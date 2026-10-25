@@ -9,7 +9,7 @@ x-logging: &logging
 
 services:
   ghostfolio:
-    image: docker.io/ghostfolio/ghostfolio:3.13.0
+    image: docker.io/ghostfolio/ghostfolio:3.92.0
     container_name: ghostfolio
     restart: unless-stopped
     init: true
@@ -35,7 +35,7 @@ services:
     <<: *logging
 
   postgres:
-    image: docker.io/library/postgres:15-alpine
+    image: docker.io/library/postgres:15.19-alpine
     container_name: gf-postgres
     restart: unless-stopped
     cap_drop:
@@ -63,7 +63,7 @@ services:
     <<: *logging
 
   redis:
-    image: docker.io/library/redis:alpine
+    image: docker.io/library/redis:8.8.3-alpine
     container_name: gf-redis
     restart: unless-stopped
     user: '999:1000'

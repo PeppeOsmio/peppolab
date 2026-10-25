@@ -1,7 +1,7 @@
 directory: /music
 library: /config/library.db
 
-plugins: lyrics
+plugins: lyrics web
 
 match:
   distance_weights:
