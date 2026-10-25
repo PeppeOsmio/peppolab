@@ -1,0 +1,23 @@
+http:
+  routers:
+    arcane:
+      entryPoints:
+        - websecure
+      rule: Host("{{ env "ARCANE_DOMAIN" }}")
+      tls:
+        certResolver: ovh
+      service: arcane
+
+    arcane_no_domain:
+      entryPoints:
+        - arcane
+      rule: HostRegexp(`.*`)
+      tls:
+        certResolver: ovh
+      service: arcane
+
+  services:
+    arcane:
+      loadBalancer:
+        servers:
+          - url: "http://arcane:3552"

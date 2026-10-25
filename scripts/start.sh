@@ -2,10 +2,10 @@
 #
 # Starts every stack's docker compose project in this repo, in order.
 #
-# Order: tailscale, traefik, pihole, portainer, dozzle, tig_stack, backrest,
+# Order: tailscale, traefik, pihole, portainer, dozzle, arcane, tig_stack, backrest,
 # then everything else, in the order listed in ORDER below. Note that traefik
 # creates the external traefik_global network that pihole, portainer, dozzle,
-# tig_stack, and backrest all join, so it must stay ahead of those.
+# arcane, tig_stack, and backrest all join, so it must stay ahead of those.
 #
 # Any stack directory found in the repo but not listed in ORDER is started
 # last, after a warning, so new stacks are never silently skipped.
@@ -36,6 +36,7 @@ ORDER=(
   pihole
   portainer
   dozzle
+  arcane
   tig_stack
   backrest
   nextcloud

@@ -25,6 +25,7 @@ services:
       - --entrypoints.adguardhome.address=:8443
       - --entrypoints.backrest.address=:9898
       - --entrypoints.dozzle.address=:10443
+      - --entrypoints.arcane.address=:3552
       - --entrypoints.traefik_dashboard.address=:11443
       - --entrypoints.registry.address=:5000
       # - --entrypoints.lockate.address=:3118
@@ -49,6 +50,7 @@ services:
       - 9443:9443 # portainer
       - 9898:9898 # backrest
       - 10443:10443 # dozzle
+      - 3552:3552 # arcane
       - 11443:11443 # traefik dashboard
       - 5000:5000 # registry
       # - 3118:3118 # lockate
@@ -69,6 +71,7 @@ services:
       PROMETHEUS_DOMAIN: "${PROMETHEUS_DOMAIN}"
       BACKREST_DOMAIN: "${BACKREST_DOMAIN}"
       DOZZLE_DOMAIN: "${DOZZLE_DOMAIN}"
+      ARCANE_DOMAIN: "${ARCANE_DOMAIN}"
       TRAEFIK_DASHBOARD_DOMAIN: "${TRAEFIK_DASHBOARD_DOMAIN}"
       REGISTRY_DOMAIN: "${REGISTRY_DOMAIN}"
       GRID_SYNAPSE_DOMAIN: "${GRID_SYNAPSE_DOMAIN}"

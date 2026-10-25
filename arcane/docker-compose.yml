@@ -1,0 +1,36 @@
+x-logging: &logging
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "10MB"
+      max-file: "10"
+
+name: arcane
+
+services:
+  arcane:
+    container_name: arcane
+    image: getarcaneapp/manager:v2.17.0
+    restart: unless-stopped
+    stop_grace_period: 15s
+    # Use host cgroup namespace so Arcane can reliably detect its own container ID
+    cgroup: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /docker_data/arcane/volumes/arcane_data:/app/data
+    environment:
+      ENCRYPTION_KEY: "${ENCRYPTION_KEY}"
+      TZ: UTC
+    healthcheck:
+      test: ["CMD", "./arcane", "health", "--timeout", "2s"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 15s
+    networks:
+      - traefik_global
+    <<: *logging
+
+networks:
+  traefik_global:
+    external: true

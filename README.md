@@ -12,7 +12,7 @@ The single entry point for all HTTP/HTTPS traffic. Handles TLS termination with 
 
 | Container | Description |
 | --- | --- |
-| `traefik` | Reverse proxy routing requests to all backend services. Exposes dedicated ports for services that can't use the standard 443 entrypoint (Portainer, Backrest, Dozzle). Prometheus metrics are exposed on a separate entrypoint. Dynamic configuration is loaded from the [`traefik/dynamic_confs/`](traefik/dynamic_confs/) directory. |
+| `traefik` | Reverse proxy routing requests to all backend services. Exposes dedicated ports for services that can't use the standard 443 entrypoint (Portainer, Backrest, Dozzle, Arcane). Prometheus metrics are exposed on a separate entrypoint. Dynamic configuration is loaded from the [`traefik/dynamic_confs/`](traefik/dynamic_confs/) directory. |
 
 ### [Tailscale](https://tailscale.com/)
 
@@ -127,6 +127,14 @@ Real-time Docker log viewer.
 | --- | --- |
 | `dozzle` | Streams container logs live in the browser. Useful for a quick look at what a container is doing without SSH or `docker logs`. No data is stored — it reads directly from the Docker socket. |
 
+### [Arcane](https://getarcane.app/)
+
+Modern web UI for managing Docker, being trialled alongside Portainer.
+
+| Container | Description |
+| --- | --- |
+| `arcane` | Arcane manager. Provides a GUI for containers, images, networks, volumes, and Compose projects, with live logs. Routed through Traefik at `ARCANE_DOMAIN` and on its dedicated port `3552` (reachable without DNS). Default login is `arcane` / `arcane-admin` and must be changed on first login. |
+
 ### Monitoring Stack
 
 Prometheus-based metrics collection with Grafana dashboards.
@@ -202,6 +210,7 @@ Repeat for every stack that has a `docs/.env`:
 ```text
 traefik   nextcloud   immich   pihole
 portainer   tig_stack   vaultwarden   tailscale
+arcane
 ```
 
 The most important file is [`traefik/docs/.env`](traefik/docs/.env). It holds the OVH API credentials and the public domain name for every service:
@@ -231,7 +240,7 @@ sudo chown -R 65534:65534 /docker_data/tig_stack/volumes/prometheus
 
 ### 6. Start services
 
-Run [`scripts/start.sh`](scripts/start.sh) to bring up every stack in the right order — Tailscale, Traefik, Pi-hole, Portainer, Dozzle, TIG stack, Backrest, then the rest. Traefik has to precede Pi-hole/Portainer/Dozzle/TIG stack/Backrest since it creates the `traefik_global` Docker network they all join. Use `--dry-run` to preview the commands it would run:
+Run [`scripts/start.sh`](scripts/start.sh) to bring up every stack in the right order — Tailscale, Traefik, Pi-hole, Portainer, Dozzle, Arcane, TIG stack, Backrest, then the rest. Traefik has to precede Pi-hole/Portainer/Dozzle/Arcane/TIG stack/Backrest since it creates the `traefik_global` Docker network they all join. Use `--dry-run` to preview the commands it would run:
 
 ```bash
 ./scripts/start.sh
@@ -246,7 +255,7 @@ cd traefik && docker compose up -d && cd ..
 Then bring up the remaining stacks in any order:
 
 ```bash
-for stack in pihole tailscale nextcloud immich navidrome ghostfolio vaultwarden backrest sftp lockate portainer dozzle tig_stack; do
+for stack in pihole tailscale nextcloud immich navidrome ghostfolio vaultwarden backrest sftp lockate portainer dozzle arcane tig_stack; do
   docker compose -p "$stack" -f "$stack/docker-compose.yml" up -d
 done
 ```
